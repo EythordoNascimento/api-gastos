@@ -9,7 +9,7 @@ class Gasto extends Model
 {
     use HasFactory;
 
-    protected $table = 'despesa';
+    protected $table = 'gastos';
     protected $primaryKey = 'id_despesa';
     public $timestamps = false;
 

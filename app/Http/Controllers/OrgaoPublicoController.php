@@ -22,7 +22,7 @@ class OrgaoPublicoController extends Controller
         $validated = $request->validate([
             'nome'   => 'required|string|max:255',
             'sigla'  => 'nullable|string|max:20',
-            'codigo' => 'required|string|max:20|unique:orgao_publico,codigo'
+            'codigo' => 'required|string|max:20|unique:orgaos_publicos,codigo'
         ]);
 
         $orgao = OrgaoPublico::create($validated);
@@ -46,7 +46,7 @@ class OrgaoPublicoController extends Controller
         $validated = $request->validate([
             'nome'   => 'sometimes|string|max:255',
             'sigla'  => 'sometimes|string|max:20',
-            'codigo' => 'sometimes|string|max:20|unique:orgao_publico,codigo,' . $orgao->id_orgao . ',id_orgao'
+            'codigo' => 'sometimes|string|max:20|unique:orgaos_publicos,codigo,' . $orgao->id_orgao . ',id_orgao'
         ]);
 
         $orgao->update($validated);

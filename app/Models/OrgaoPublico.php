@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +9,7 @@ class OrgaoPublico extends Model
 {
     use HasFactory;
 
-    protected $table = 'orgao_publico';
+    protected $table = 'orgaos_publicos';
     protected $primaryKey = 'id_orgao';
     public $timestamps = false;
 

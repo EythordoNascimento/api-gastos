@@ -19,11 +19,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/gastos', [GastoController::class, 'index'])->name('gastos.index');
     Route::post('/gastos', [GastoController::class, 'store'])->name('gastos.store');
 
-    // Rotas adicionais de gastos
-    Route::get('/gastos/educacao', [GastoController::class, 'educacao'])->name('gastos.educacao');
-    Route::get('/gastos/ranking', [GastoController::class, 'ranking'])->name('gastos.ranking');
-    Route::post('/gastos/importar', [GastoController::class, 'importar'])->name('gastos.importar');
-
     // Rotas dinâmicas (devem vir depois das fixas)
     Route::get('/gastos/{gasto}', [GastoController::class, 'show'])->name('gastos.show');
     Route::put('/gastos/{gasto}', [GastoController::class, 'update'])->name('gastos.update');
