@@ -19,6 +19,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/gastos', [GastoController::class, 'index'])->name('gastos.index');
     Route::post('/gastos', [GastoController::class, 'store'])->name('gastos.store');
 
+    // 🔹 Rota fixa do ranking (deve vir antes das dinâmicas)
+    Route::get('/gastos/ranking', [GastoController::class, 'ranking'])->name('gastos.ranking');
+
     // Rotas dinâmicas (devem vir depois das fixas)
     Route::get('/gastos/{gasto}', [GastoController::class, 'show'])->name('gastos.show');
     Route::put('/gastos/{gasto}', [GastoController::class, 'update'])->name('gastos.update');
@@ -28,14 +31,24 @@ Route::prefix('v1')->group(function () {
     // Recurso RESTful "órgãos públicos"
     Route::get('/orgaos', [OrgaoPublicoController::class, 'index'])->name('orgaos.index');
     Route::post('/orgaos', [OrgaoPublicoController::class, 'store'])->name('orgaos.store');
+
+    // Rota fixa deve vir antes das dinâmicas
+    Route::get('/orgaos/ranking', [OrgaoPublicoController::class, 'ranking'])->name('orgaos.ranking');
+
+    // Rotas dinâmicas (devem vir depois das fixas)
     Route::get('/orgaos/{orgao}', [OrgaoPublicoController::class, 'show'])->name('orgaos.show');
     Route::put('/orgaos/{orgao}', [OrgaoPublicoController::class, 'update'])->name('orgaos.update');
     Route::delete('/orgaos/{orgao}', [OrgaoPublicoController::class, 'destroy'])->name('orgaos.destroy');
 
     // Recurso "despesas de PE"
-    Route::post('/pe/despesas/importar', [DespesaPEController::class, 'importar'])->name('pe.despesas.importar');
-    Route::get('/pe/despesas', [DespesaPEController::class, 'index'])->name('pe.despesas.index');
-    Route::get('/pe/despesas/ranking', [DespesaPEController::class, 'ranking'])->name('pe.despesas.ranking');
+    Route::prefix('pe/despesas')->group(function () {
+        Route::post('/importar', [DespesaPEController::class, 'importar'])->name('pe.despesas.importar');
+        Route::get('/', [DespesaPEController::class, 'index'])->name('pe.despesas.index');
+        Route::get('/ranking', [DespesaPEController::class, 'ranking'])->name('pe.despesas.ranking');
+        Route::get('/filtro', [DespesaPEController::class, 'filtro'])->name('pe.despesas.filtro');
+        Route::get('/comparativo', [DespesaPEController::class, 'comparativo'])->name('pe.despesas.comparativo');
+        Route::get('/indicadores', [DespesaPEController::class, 'indicadores'])->name('pe.despesas.indicadores');
+    });
 });
 
 // Rota protegida por autenticação (Sanctum)

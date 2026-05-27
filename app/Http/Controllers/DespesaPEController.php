@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DespesaPE;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class DespesaPEController extends Controller
@@ -50,12 +51,12 @@ class DespesaPEController extends Controller
         }
     }
 
-    // Listar todas as despesas
+    // Listar todas as despesas com paginação
     public function index()
     {
         return response()->json([
             'message' => 'Lista de despesas reais de PE',
-            'data' => DespesaPE::all()
+            'data' => DespesaPE::paginate(20) // paginação para não sobrecarregar
         ]);
     }
 
@@ -70,6 +71,55 @@ class DespesaPEController extends Controller
         return response()->json([
             'message' => 'Ranking de despesas por unidade gestora em PE',
             'data' => $ranking
+        ]);
+    }
+
+    // Filtro apenas por mês
+public function filtro(Request $request)
+{
+    if (!$request->has('mes')) {
+        return response()->json([
+            'error' => 'Informe o mês (1 a 12) para filtrar'
+        ], 400);
+    }
+
+    $mes = $request->mes;
+
+    $query = DespesaPE::whereMonth('data', $mes)->get();
+
+    return response()->json([
+        'message' => "Despesas do mês $mes",
+        'data' => $query
+    ]);
+}
+
+
+    // Comparativo trimestral dentro de um ano
+public function comparativo(Request $request)
+{
+    $ano = $request->ano ?? 2026; 
+
+    $dados = DespesaPE::selectRaw('CEIL(MONTH(data)/3) as trimestre, SUM(valor) as total')
+        ->whereYear('data', $ano)
+        ->groupBy('trimestre')
+        ->orderBy('trimestre')
+        ->get();
+
+    return response()->json([
+        'message' => "Comparativo trimestral do ano $ano",
+        'data' => $dados
+    ]);
+}
+
+
+    // Indicadores automáticos
+    public function indicadores()
+    {
+        return response()->json([
+            'total' => DespesaPE::sum('valor'),
+            'media' => DespesaPE::avg('valor'),
+            'maior' => DespesaPE::max('valor'),
+            'menor' => DespesaPE::min('valor')
         ]);
     }
 }

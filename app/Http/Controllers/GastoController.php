@@ -26,7 +26,6 @@ class GastoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'tipo' => 'required|string|max:255',
             'valor' => 'required|numeric|min:0.01',
             'data' => 'required|date',
             'fase' => 'nullable|string|max:50',
@@ -58,7 +57,6 @@ class GastoController extends Controller
     public function update(Request $request, Gasto $gasto)
     {
         $validated = $request->validate([
-            'tipo' => 'sometimes|string|max:255',
             'valor' => 'sometimes|numeric|min:0.01',
             'data' => 'sometimes|date',
             'fase' => 'sometimes|nullable|string|max:50',
@@ -79,7 +77,6 @@ class GastoController extends Controller
     public function updatePartial(Request $request, Gasto $gasto)
     {
         $validated = $request->validate([
-            'tipo' => 'sometimes|string|max:255',
             'valor' => 'sometimes|numeric|min:0.01',
             'data' => 'sometimes|date',
             'fase' => 'sometimes|nullable|string|max:50',

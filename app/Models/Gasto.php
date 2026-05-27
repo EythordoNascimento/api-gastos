@@ -10,19 +10,15 @@ class Gasto extends Model
     use HasFactory;
 
     protected $table = 'gastos';
-    protected $primaryKey = 'id_despesa';
-    public $timestamps = false;
-
-    // Campos permitidos para mass assignment (ajustados para sua tabela)
+    protected $primaryKey = 'id';
+    public $timestamps = true; 
     protected $fillable = [
-        'tipo',          // usado como descrição
         'valor',
         'data',
         'fase',
-        'id_orgao'       // FK para orgao_publico
+        'id_orgao'
     ];
 
-    // Relacionamento com órgão público
     public function orgao()
     {
         return $this->belongsTo(OrgaoPublico::class, 'id_orgao', 'id_orgao');

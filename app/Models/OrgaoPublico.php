@@ -15,8 +15,8 @@ class OrgaoPublico extends Model
 
     protected $fillable = [
         'nome',
-        'esfera',
         'sigla',
-        'codigo'
+        'codigo',
+        'esfera'
     ];
 }
