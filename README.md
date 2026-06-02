@@ -64,18 +64,6 @@ O backend foi organizado utilizando:
 
 ---
 
-# ▶️ Demonstração
-
-O vídeo de demonstração apresenta:
-
-* Estrutura do código;
-* Funcionamento da API;
-* Testes no Postman;
-* Banco de dados no MySQL Workbench;
-* Importação e consulta de dados públicos.
-
----
-
 # 🎯 Objetivo
 
 O projeto busca demonstrar como a tecnologia pode contribuir para maior transparência pública e melhor acesso às informações sobre gastos governamentais.
