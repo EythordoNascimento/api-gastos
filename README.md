@@ -72,9 +72,4 @@ Além disso, representa minha evolução no desenvolvimento backend utilizando b
 
 ---
 
-# 👨‍💻 Autor
 
-Eythor do Nascimento Fernandes
-
-GitHub:
-github.com/EythordoNascimento
