@@ -7,116 +7,89 @@ use App\Models\Gasto;
 
 class GastoController extends Controller
 {
-    /**
-     * Listar todos os gastos
-     */
     public function index()
     {
         $gastos = Gasto::with('orgao')->get();
 
         return response()->json([
+            'success' => true,
             'message' => 'Lista de despesas cadastradas',
-            'data' => $gastos
+            'data'    => $gastos
         ]);
     }
 
-    /**
-     * Criar gasto manual
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'valor' => 'required|numeric|min:0.01',
-            'data' => 'required|date',
-            'fase' => 'nullable|string|max:50',
+            'valor'    => 'required|numeric|min:0.01',
+            'data'     => 'required|date',
+            'fase'     => 'nullable|string|max:50|min:1',
             'id_orgao' => 'nullable|exists:orgaos_publicos,id_orgao'
         ]);
 
         $gasto = Gasto::create($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Despesa registrada com sucesso',
-            'data' => $gasto
+            'data'    => $gasto
         ], 201);
     }
 
-    /**
-     * Mostrar gasto específico
-     */
-    public function show(Gasto $gasto)
+    public function show($id)
     {
+        $gasto = Gasto::with('orgao')->findOrFail($id);
+
         return response()->json([
-            'message' => 'Despesa encontrada',
-            'data' => $gasto->load('orgao')
+            'success' => true,
+            'message' => 'Detalhes da despesa',
+            'data'    => $gasto
         ]);
     }
 
-    /**
-     * Atualizar totalmente (PUT)
-     */
-    public function update(Request $request, Gasto $gasto)
+    public function update(Request $request, $id)
     {
+        $gasto = Gasto::findOrFail($id);
+
         $validated = $request->validate([
-            'valor' => 'sometimes|numeric|min:0.01',
-            'data' => 'sometimes|date',
-            'fase' => 'sometimes|nullable|string|max:50',
+            'valor'    => 'sometimes|required|numeric|min:0.01',
+            'data'     => 'sometimes|required|date',
+            'fase'     => 'sometimes|nullable|string|max:50|min:1',
             'id_orgao' => 'sometimes|nullable|exists:orgaos_publicos,id_orgao'
         ]);
 
         $gasto->update($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Despesa atualizada com sucesso',
-            'data' => $gasto
+            'data'    => $gasto
         ]);
     }
 
-    /**
-     * Atualização parcial (PATCH)
-     */
-    public function updatePartial(Request $request, Gasto $gasto)
+    public function destroy($id)
     {
-        $validated = $request->validate([
-            'valor' => 'sometimes|numeric|min:0.01',
-            'data' => 'sometimes|date',
-            'fase' => 'sometimes|nullable|string|max:50',
-            'id_orgao' => 'sometimes|nullable|exists:orgaos_publicos,id_orgao'
-        ]);
-
-        $gasto->update($validated);
-
-        return response()->json([
-            'message' => 'Despesa atualizada parcialmente',
-            'data' => $gasto
-        ]);
-    }
-
-    /**
-     * Excluir gasto
-     */
-    public function destroy(Gasto $gasto)
-    {
+        $gasto = Gasto::findOrFail($id);
         $gasto->delete();
 
         return response()->json([
+            'success' => true,
             'message' => 'Despesa removida com sucesso'
         ], 200);
     }
 
-    /**
-     * Ranking de gastos por órgão
-     */
     public function ranking()
     {
-        $ranking = Gasto::selectRaw('id_orgao, SUM(valor) as total')
+        $ranking = Gasto::selectRaw('id_orgao, COALESCE(SUM(valor), 0) as total_gastos')
             ->with('orgao')
             ->groupBy('id_orgao')
-            ->orderByDesc('total')
+            ->orderByDesc('total_gastos')
             ->get();
 
         return response()->json([
+            'success' => true,
             'message' => 'Ranking de despesas por órgão',
-            'data' => $ranking
+            'data'    => $ranking
         ]);
     }
 }

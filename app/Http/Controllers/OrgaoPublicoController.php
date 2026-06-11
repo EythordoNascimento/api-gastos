@@ -12,8 +12,9 @@ class OrgaoPublicoController extends Controller
         $orgaos = OrgaoPublico::all();
 
         return response()->json([
+            'success' => true,
             'message' => 'Lista de órgãos públicos',
-            'data' => $orgaos
+            'data'    => $orgaos
         ]);
     }
 
@@ -29,21 +30,27 @@ class OrgaoPublicoController extends Controller
         $orgao = OrgaoPublico::create($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Órgão público criado com sucesso',
             'data'    => $orgao
         ], 201);
     }
 
-    public function show(OrgaoPublico $orgao)
+    public function show($id)
     {
+        $orgao = OrgaoPublico::findOrFail($id);
+
         return response()->json([
+            'success' => true,
             'message' => 'Detalhes do órgão',
             'data'    => $orgao
         ]);
     }
 
-    public function update(Request $request, OrgaoPublico $orgao)
+    public function update(Request $request, $id)
     {
+        $orgao = OrgaoPublico::findOrFail($id);
+
         $validated = $request->validate([
             'nome'   => 'sometimes|string|max:255',
             'sigla'  => 'sometimes|string|max:20',
@@ -54,21 +61,23 @@ class OrgaoPublicoController extends Controller
         $orgao->update($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Órgão público atualizado',
             'data'    => $orgao
         ]);
     }
 
-    public function destroy(OrgaoPublico $orgao)
+    public function destroy($id)
     {
+        $orgao = OrgaoPublico::findOrFail($id);
         $orgao->delete();
 
         return response()->json([
+            'success' => true,
             'message' => 'Órgão público removido com sucesso'
         ], 200);
     }
 
-    //  Ranking
     public function ranking()
     {
         $ranking = OrgaoPublico::select(
@@ -82,13 +91,11 @@ class OrgaoPublicoController extends Controller
         ->groupBy('orgaos_publicos.id_orgao', 'orgaos_publicos.nome', 'orgaos_publicos.sigla', 'orgaos_publicos.esfera')
         ->orderByDesc('total_gastos')
         ->get();
-    
+
         return response()->json([
+            'success' => true,
             'message' => 'Ranking de órgãos por gastos',
             'data'    => $ranking
         ]);
     }
-    
-
-    }
-
+}
