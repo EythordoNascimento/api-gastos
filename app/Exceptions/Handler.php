@@ -12,7 +12,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // Erro de validação
-        if ($exception instanceof ValidationException) {
+        if ($exception instanceof ValidationException) { 
             return response()->json([
                 'success' => false,
                 'message' => 'Erro de validação',
